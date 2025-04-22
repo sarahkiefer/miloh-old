@@ -433,7 +433,7 @@ def miloh():
         log_path_local = f"logs/{course}/{'production' if prod else 'test'}/{version if prod else experiment_name}.jsonl"
         log_local({"inputs": input_dict, "outputs": output_dict}, log_path_local)
     
-    return jsonify(output_dict)
+    return jsonify({"Miloh": output_dict["response"]})
 
 
 
