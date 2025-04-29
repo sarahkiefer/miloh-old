@@ -344,25 +344,25 @@ def miloh():
     # Manual document retrieval
     problem_list_manual = selected_doc_manual = retrieved_docs_manual = 'none'
     if question_category in (assignment_categories + worksheet_categories):
-    question_info = re.sub(
-        r"\n+",
-        " ",
-        f"{question_category} "
-        f"{input_dict.get('assignment', '')} "
-        f"{input_dict.get('question', '')} "
-        f"{input_dict.get('description', '')} "
-        f"{processed_conversation[-1]['text'] if len(processed_conversation) <= 2 else processed_conversation[0]['text'] + processed_conversation[-1]['text']}"
-    )
-        problem_list_manual, selected_doc_manual, retrieved_docs_manual = retrieve_docs_manual(
-            question_category=question_category,
-            category_mapping=ast.literal_eval(os.getenv('CATEGORY_MAPPING', '{}')),
-            question_subcategory=input_dict.get('subcategory'),
-            subcategory_mapping=ast.literal_eval(os.getenv('SUBCATEGORY_MAPPING', '{}')),
-            question_info=question_info,
-            get_prompt=prompts.get_choose_problem_path_prompt)
-        logger.info('List of problems: %s', problem_list_manual)
-        logger.info('Selected manual document: %s', selected_doc_manual)
-        logger.info('Retrieved manual documents: %s', retrieved_docs_manual)
+        question_info = re.sub(
+            r"\n+",
+            " ",
+            f"{question_category} "
+            f"{input_dict.get('assignment', '')} "
+            f"{input_dict.get('question', '')} "
+            f"{input_dict.get('description', '')} "
+            f"{processed_conversation[-1]['text'] if len(processed_conversation) <= 2 else processed_conversation[0]['text'] + processed_conversation[-1]['text']}"
+        )
+            problem_list_manual, selected_doc_manual, retrieved_docs_manual = retrieve_docs_manual(
+                question_category=question_category,
+                category_mapping=ast.literal_eval(os.getenv('CATEGORY_MAPPING', '{}')),
+                question_subcategory=input_dict.get('subcategory'),
+                subcategory_mapping=ast.literal_eval(os.getenv('SUBCATEGORY_MAPPING', '{}')),
+                question_info=question_info,
+                get_prompt=prompts.get_choose_problem_path_prompt)
+            logger.info('List of problems: %s', problem_list_manual)
+            logger.info('Selected manual document: %s', selected_doc_manual)
+            logger.info('Retrieved manual documents: %s', retrieved_docs_manual)
 
 # Response generation
     response_0 = response = ''
