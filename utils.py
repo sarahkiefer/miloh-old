@@ -425,3 +425,65 @@ def process_markdown(text: str) -> str:
         '"': '&quot;',
         "'": '&apos;'
     }[m.group()], text)
+
+def get_edstem_token(course: str) -> str:
+    """
+    Get the EdStem API token for a given course.
+
+    Args:
+        course (str): The course identifier.
+
+    Returns:
+        str: The EdStem API token for the specified course.
+    """
+    course_tokens = {
+        'ds100': 'DS100_EDSTEM_KEY',
+        'ds100-sp25': 'DS100_EDSTEM_KEY',
+        'ds8': 'DS8_EDSTEM_KEY',
+        'cs61a': 'CS61A_EDSTEM_KEY'
+    }
+    return os.getenv(course_tokens.get(course, ''))
+
+
+def delete_comment(course: str, id: str) -> None:
+    """
+    Delete a comment from EdStem for a given course.
+
+    Args:
+        course (str): The course identifier.
+        comment_id (str): The ID of the comment to delete.
+    """
+    url = f"https://us.edstem.org/api/comments/{id}"
+    headers = {
+        'Authorization': f'Bearer {get_edstem_token(course)}',
+        'Content-Type': 'application/json'
+    }
+    response = requests.delete(url, headers=headers)
+    response.raise_for_status()
+
+
+def reply_to_ed(course: str, id: str, text: str, post_answer: bool, private: bool) -> None:
+    """
+    Reply to a thread on EdStem for a given course.
+
+    Args:
+        course (str): The course identifier.
+        thread_id (str): The ID of the thread to reply to.
+        text (str): The content of the reply.
+        post_answer (bool): Whether to post as an answer or a comment.
+        private (bool): Whether the reply should be private.
+    """
+    url = f"https://us.edstem.org/api/{'threads' if post_answer else 'comments'}/{id}/comments"
+    payload = {
+        "comment": {
+            "type": "answer" if post_answer else "comment",
+            "content": f"<document version=\"2.0\"><paragraph>{process_markdown(text)}</paragraph></document>",
+            "is_private": private,
+        }
+    }
+    headers = {
+        'Authorization': f'Bearer {get_edstem_token(course)}',
+        'Content-Type': 'application/json'
+    }
+    response = requests.post(url, headers=headers, json=payload)
+    response.raise_for_status()
