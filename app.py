@@ -294,6 +294,7 @@ def miloh():
             "document": ""
         })
 
+    processed_conversation = conversation_history
     # For thread_title, combine assignment + question:
     thread_title = f"{input_dict.get('assignment','')} — {input_dict.get('question','')}"
     logger.info("Processed conversation: %s", processed_conversation)
