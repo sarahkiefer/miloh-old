@@ -263,6 +263,7 @@ def miloh():
     # Get input data and load the course config    
     input_dict = request.json or {}
     logger.info('Received input: %s', input_dict)
+    course = 'ds100_miloh'
     load_course_config('ds100_miloh')
 
     assignment_categories = get_env_list('ASSIGNMENT_CATEGORIES')
