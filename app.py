@@ -296,12 +296,6 @@ def miloh():
 
     # For thread_title, combine assignment + question:
     thread_title = f"{input_dict.get('assignment','')} — {input_dict.get('question','')}"
-
-    # Now call ocr_process_input
-    processed_conversation = ocr_process_input(
-        thread_title=thread_title,
-        conversation_history=conversation_history
-    )
     logger.info("Processed conversation: %s", processed_conversation)
 
     processed_conversation_search = process_conversation_search(
