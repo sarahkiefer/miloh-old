@@ -283,7 +283,7 @@ def miloh():
     conversation_history.append({
         "user_role": "student",      # treat this entire first chunk as "student" text
         "text": initial_text,
-        "document": ""              # No images (so no OCR needed)
+        "document": None              # No images (so no OCR needed)
     })
 
     # Then put each chat message as additional "student" turns
@@ -291,12 +291,15 @@ def miloh():
         conversation_history.append({
             "user_role": "student",
             "text": c,
-            "document": ""
+            "document": None
         })
 
-    processed_conversation = conversation_history
     # For thread_title, combine assignment + question:
     thread_title = f"{input_dict.get('assignment','')} — {input_dict.get('question','')}"
+    processed_conversation = ocr_process_input(
+        thread_title=thread_title,
+        conversation_history=conversation_history,
+    )
     logger.info("Processed conversation: %s", processed_conversation)
 
     processed_conversation_search = process_conversation_search(
@@ -417,17 +420,17 @@ def miloh():
         'response': response
     }
     
-    prod = input_dict['prod'] == 'true'
-    version = os.getenv('EDISON_VERSION')
-    experiment_name = input_dict.get('experiment_name', 'test')
+    # prod = input_dict['prod'] == 'true'
+    # version = os.getenv('EDISON_VERSION')
+    # experiment_name = input_dict.get('experiment_name', 'test')
 
-    if input_dict.get('log_blob') == 'true':
-        log_path_blob = f"logs/{'production' if prod else 'test'}/{version if prod else experiment_name}.jsonl"
-        log_blob({"inputs": input_dict, "outputs": output_dict}, log_path_blob)
+    # if input_dict.get('log_blob') == 'true':
+    #     log_path_blob = f"logs/{'production' if prod else 'test'}/{version if prod else experiment_name}.jsonl"
+    #     log_blob({"inputs": input_dict, "outputs": output_dict}, log_path_blob)
 
-    if input_dict.get('log_local') == 'true':
-        log_path_local = f"logs/{course}/{'production' if prod else 'test'}/{version if prod else experiment_name}.jsonl"
-        log_local({"inputs": input_dict, "outputs": output_dict}, log_path_local)
+    # if input_dict.get('log_local') == 'true':
+    #     log_path_local = f"logs/{course}/{'production' if prod else 'test'}/{version if prod else experiment_name}.jsonl"
+    #     log_local({"inputs": input_dict, "outputs": output_dict}, log_path_local)
     
     return jsonify({"Miloh": output_dict["response"]})
 
